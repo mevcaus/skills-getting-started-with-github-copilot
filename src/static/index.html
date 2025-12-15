@@ -5,6 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mergington High School Activities</title>
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* ...existing code... */
+
+      .participants-section {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .participants-section h4 {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .participants-list {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+      }
+
+      .participants-list li {
+        padding: 5px 0;
+        color: #666;
+        font-size: 13px;
+      }
+
+      .participants-list li:before {
+        content: "• ";
+        color: #4caf50;
+        font-weight: bold;
+        margin-right: 8px;
+      }
+
+      .no-participants {
+        color: #999;
+        font-style: italic;
+        font-size: 13px;
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -26,7 +67,12 @@
         <form id="signup-form">
           <div class="form-group">
             <label for="email">Student Email:</label>
-            <input type="email" id="email" required placeholder="your-email@mergington.edu" />
+            <input
+              type="email"
+              id="email"
+              required
+              placeholder="your-email@mergington.edu"
+            />
           </div>
           <div class="form-group">
             <label for="activity">Select Activity:</label>
@@ -46,5 +92,48 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+      // ...existing code...
+
+      function displayActivities(activities) {
+        const container = document.getElementById("activities");
+        container.innerHTML = "";
+
+        for (const [name, details] of Object.entries(activities)) {
+          const card = document.createElement("div");
+          card.className = "activity-card";
+
+          const spotsLeft = details.max_participants - details.participants.length;
+
+          // Build participants list HTML
+          let participantsHTML =
+            '<div class="participants-section"><h4>Participants:</h4>';
+          if (details.participants.length > 0) {
+            participantsHTML += '<ul class="participants-list">';
+            details.participants.forEach((participant) => {
+              participantsHTML += `<li>${participant}</li>`;
+            });
+            participantsHTML += "</ul>";
+          } else {
+            participantsHTML +=
+              '<p class="no-participants">No participants yet - be the first to sign up!</p>';
+          }
+          participantsHTML += "</div>";
+
+          card.innerHTML = `
+                <h3>${name}</h3>
+                <p>${details.description}</p>
+                <p><strong>Schedule:</strong> ${details.schedule}</p>
+                <p><strong>Spots available:</strong> ${spotsLeft} of ${details.max_participants}</p>
+                ${participantsHTML}
+                <button onclick="signUp('${name}')">Sign Up</button>
+            `;
+
+          container.appendChild(card);
+        }
+      }
+
+      // ...existing code...
+    </script>
   </body>
 </html>
