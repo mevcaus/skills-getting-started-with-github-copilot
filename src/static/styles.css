@@ -157,22 +157,46 @@ footer {
 }
 
 .participants-list {
-    list-style: none;
+  list-style: none;
     padding-left: 0;
     margin: 0;
 }
 
-.participants-list li {
-    padding: 5px 0;
-    color: #666;
-    font-size: 13px;
+.participants-list.no-bullets {
+  list-style: none;
+  padding-left: 0;
 }
 
-.participants-list li:before {
-    content: "• ";
-    color: #4CAF50;
-    font-weight: bold;
-    margin-right: 8px;
+.participant-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #f8f9fa;
+  margin-bottom: 6px;
+}
+
+.participant-email {
+  color: #444;
+  font-size: 13px;
+}
+
+.delete-participant {
+  border: none;
+  background: #ffecec;
+  color: #d64545;
+  font-weight: 700;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  line-height: 24px;
+  text-align: center;
+}
+
+.delete-participant:hover {
+  background: #ffd9d9;
 }
 
 .no-participants {

@@ -23,11 +23,15 @@ document.addEventListener("DOMContentLoaded", () => {
         // Build participants list HTML
         let participantsHTML = '<div class="participants-section"><h4>Participants:</h4>';
         if (details.participants.length > 0) {
-          participantsHTML += '<ul class="participants-list">';
-          details.participants.forEach(participant => {
-            participantsHTML += `<li>${participant}</li>`;
-          });
-          participantsHTML += '</ul>';
+            participantsHTML += '<ul class="participants-list no-bullets">';
+            details.participants.forEach(participant => {
+                participantsHTML += `
+                    <li class="participant-item">
+                        <span class="participant-email">${participant}</span>
+                        <button class="delete-participant" aria-label="Remove participant" title="Remove" onclick="unregisterParticipant('${name}', '${participant}')">✕</button>
+                    </li>`;
+            });
+            participantsHTML += '</ul>';
         } else {
           participantsHTML += '<p class="no-participants">No participants yet - be the first to sign up!</p>';
         }
@@ -77,6 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
+        // Refresh activities list to reflect new participant without page reload
+        await fetchActivities();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
@@ -98,4 +104,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize app
   fetchActivities();
+  // Expose unregister function globally for button onclick usage
+  window.unregisterParticipant = async (activityName, email) => {
+    try {
+      const resp = await fetch(`/activities/${encodeURIComponent(activityName)}/participants/${encodeURIComponent(email)}`, {
+        method: 'DELETE'
+      });
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.detail || 'Failed to unregister participant');
+      }
+      await fetchActivities();
+    } catch (e) {
+      alert(e.message);
+    }
+  };
 });

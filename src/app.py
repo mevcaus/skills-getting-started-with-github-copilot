@@ -77,6 +77,21 @@ activities = {
     }
 }
 
+@app.delete("/activities/{activity_name}/participants/{email}")
+def unregister_participant(activity_name: str, email: str):
+    """Unregister a participant from an activity by email"""
+    if activity_name not in activities:
+        raise HTTPException(status_code=404, detail="Activity not found")
+
+    activity = activities[activity_name]
+    participants = activity.get("participants", [])
+
+    if email not in participants:
+        raise HTTPException(status_code=404, detail="Participant not found for this activity")
+
+    activity["participants"] = [p for p in participants if p != email]
+    return {"message": f"Unregistered {email} from {activity_name}", "participants": activity["participants"]}
+
 
 @app.get("/")
 def root():
